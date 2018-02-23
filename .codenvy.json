@@ -1,0 +1,96 @@
+{
+  "v":"4.0",
+  "name":"dev-test",
+  "workspace":{
+    "defaultEnv":"dev-environment",
+    "environments":[
+      {
+        "name":"dev-environment",
+        "machineConfigs":[
+          {
+            "limits":{
+              "ram":2000
+            },
+            "name":"dev-machine",
+            "type":"docker",
+            "source":{
+              "content":"FROM codenvy/debian_jdk8\nEXPOSE 9966",
+              "type":"dockerfile"
+            },
+            "dev":true,
+            "servers":[
+            ],
+            "envVariables":{
+            },
+            "links":[
+            ]
+          }
+        ]
+      }
+    ],
+    "name":"dev-environment",
+    "commands":[
+      {
+        "commandLine":"$TOMCAT_HOME/bin/catalina.sh run",
+        "name":"run tomcat",
+        "attributes":{
+          "previewUrl":"http://${server.port.8080}"
+        },
+        "type":"custom"
+      },
+      {
+        "commandLine":"$TOMCAT_HOME/bin/catalina.sh stop",
+        "name":"stop tomcat",
+        "attributes":{
+          "previewUrl":""
+        },
+        "type":"custom"
+      },
+      {
+        "commandLine":"mvn -f ${current.project.path} clean install && cp ${current.project.path}/target/*.war $TOMCAT_HOME/webapps/ROOT.war",
+        "name":"build",
+        "attributes":{
+          "previewUrl":""
+        },
+        "type":"mvn"
+      },
+      {
+        "commandLine":"mvn -f ${current.project.path} clean install && cp ${current.project.path}/target/*.war $TOMCAT_HOME/webapps/ROOT.war && $TOMCAT_HOME/bin/catalina.sh run",
+        "name":"build and run",
+        "attributes":{
+          "previewUrl":"http://${server.port.8080}"
+        },
+        "type":"mvn"
+      },
+      {
+        "commandLine":"mvn -f ${current.project.path} clean install && cp ${current.project.path}/target/*.war $TOMCAT_HOME/webapps/ROOT.war && $TOMCAT_HOME/bin/catalina.sh jpda run",
+        "name":"debug",
+        "attributes":{
+          "previewUrl":"http://${server.port.8080}"
+        },
+        "type":"mvn"
+      }
+    ],
+    "links":[
+
+    ]
+  },
+  "ide":{
+    "onProjectsLoaded":{
+      "actions":[
+        {
+          "properties":{
+            "file":"/web-java-spring-petclinic/src/main/java/org/springframework/samples/petclinic/model/Pet.java"
+          },
+          "id":"openFile"
+        },
+        {
+          "properties":{
+            "name":"build and run"
+          },
+          "id":"runCommand"
+        }
+      ]
+    }
+  }
+}
